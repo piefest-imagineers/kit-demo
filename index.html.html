@@ -1,0 +1,432 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PIEFEST Companion — Fale Samoa Demo</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,600;0,6..12,700;0,6..12,800&display=swap');
+
+  :root{
+    --red:#E4322B; --red-deep:#C0271F;
+    --yellow:#F6B53F; --green:#2FA36B; --blue:#3FA9D6;
+    --ink:#211C18; --muted:#6B6258;
+    --cream:#FBF4E8; --sand:#F3E8D4; --card:#FFFDF8;
+    --line:#E7DBC4;
+    --shadow:0 10px 30px rgba(33,28,24,.10), 0 2px 8px rgba(33,28,24,.06);
+    --radius:20px;
+    font-size:16px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Nunito Sans',system-ui,sans-serif;
+    color:var(--ink);
+    background:var(--cream);
+    background-image:
+      radial-gradient(var(--sand) 1.5px, transparent 1.5px),
+      radial-gradient(var(--sand) 1.5px, var(--cream) 1.5px);
+    background-size:28px 28px;
+    background-position:0 0,14px 14px;
+    line-height:1.5;
+  }
+  h1,h2,h3,.display{font-family:'Fredoka',sans-serif; font-weight:600; letter-spacing:.2px}
+
+  .wrap{max-width:1080px; margin:0 auto; padding:18px 18px 40px}
+
+  /* Header */
+  header{
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    padding:16px 20px; background:var(--ink); color:var(--cream);
+    border-radius:var(--radius); box-shadow:var(--shadow); position:relative; overflow:hidden;
+  }
+  header::after{
+    content:""; position:absolute; right:-40px; top:-40px; width:180px; height:180px;
+    background:
+      repeating-linear-gradient(45deg, transparent 0 10px, rgba(246,181,63,.12) 10px 20px);
+    transform:rotate(8deg); pointer-events:none;
+  }
+  .logo{
+    font-family:'Fredoka',sans-serif; font-weight:700; font-size:1.45rem; line-height:1;
+    display:flex; align-items:center; gap:10px;
+  }
+  .logo .dot{width:14px;height:14px;border-radius:50%;background:var(--red);box-shadow:0 0 0 4px rgba(228,50,43,.25)}
+  .logo b{color:var(--yellow)}
+  .tag{font-size:.82rem; color:#D8CFC0; margin-left:2px}
+  .spacer{flex:1}
+  .parent-btn{
+    font-family:'Fredoka',sans-serif; font-size:.92rem; cursor:pointer;
+    background:var(--cream); color:var(--ink); border:none; padding:9px 16px;
+    border-radius:999px; font-weight:500; transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .parent-btn:hover{transform:translateY(-1px); box-shadow:0 6px 16px rgba(0,0,0,.18)}
+
+  /* Kit banner */
+  .kit{
+    display:flex; align-items:center; gap:12px; margin:14px 0 18px;
+    background:var(--card); border:2px solid var(--line); border-radius:16px; padding:12px 16px; box-shadow:var(--shadow);
+  }
+  .kit .pill{font-family:'Fredoka',sans-serif; font-size:.72rem; text-transform:uppercase; letter-spacing:.6px;
+    background:var(--red); color:#fff; padding:5px 10px; border-radius:999px; white-space:nowrap}
+  .kit .knm{font-family:'Fredoka',sans-serif; font-weight:600; font-size:1.02rem}
+  .kit .kgr{font-size:.84rem; color:var(--muted)}
+
+  /* Layout */
+  .grid{display:grid; grid-template-columns:1fr 300px; gap:18px}
+  @media(max-width:860px){ .grid{grid-template-columns:1fr} }
+
+  .panel{background:var(--card); border:2px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow)}
+
+  /* Mascot selector */
+  .mascots{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; padding:14px}
+  .mascot{
+    cursor:pointer; border:2px solid var(--line); border-radius:16px; padding:12px 10px 11px;
+    text-align:center; background:var(--cream); transition:all .15s ease; position:relative;
+  }
+  .mascot:hover{transform:translateY(-2px)}
+  .mascot.active{border-color:var(--mc); background:#fff; box-shadow:0 8px 20px rgba(0,0,0,.10)}
+  .mascot.active::after{
+    content:""; position:absolute; left:50%; bottom:-12px; transform:translateX(-50%);
+    border:7px solid transparent; border-top-color:var(--mc);
+  }
+  .mascot svg{width:54px; height:54px; display:block; margin:0 auto 6px}
+  .mascot .mn{font-family:'Fredoka',sans-serif; font-weight:600; font-size:1rem; line-height:1}
+  .mascot .md{font-size:.72rem; color:var(--muted); margin-top:3px}
+
+  /* Chat */
+  .chat{padding:6px 16px 0; height:380px; overflow-y:auto; display:flex; flex-direction:column; gap:12px}
+  .chat::-webkit-scrollbar{width:8px} .chat::-webkit-scrollbar-thumb{background:var(--line); border-radius:8px}
+  .row{display:flex; gap:10px; align-items:flex-end; animation:rise .25s ease}
+  @keyframes rise{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
+  .row.me{flex-direction:row-reverse}
+  .av{width:34px;height:34px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;background:var(--cream);border:2px solid var(--line)}
+  .av svg{width:24px;height:24px}
+  .bubble{max-width:78%; padding:11px 14px; border-radius:16px; font-size:.95rem}
+  .bubble.bot{background:var(--cream); border:2px solid var(--line); border-bottom-left-radius:5px}
+  .bubble.me{background:var(--ink); color:var(--cream); border-bottom-right-radius:5px}
+  .bubble .who{font-family:'Fredoka',sans-serif; font-size:.78rem; font-weight:600; margin-bottom:2px}
+  .sys{align-self:center; font-size:.78rem; color:var(--muted); background:var(--sand); padding:4px 12px; border-radius:999px}
+
+  .typing{display:inline-flex; gap:4px; padding:4px 2px}
+  .typing i{width:7px;height:7px;border-radius:50%;background:var(--muted); animation:bob 1s infinite}
+  .typing i:nth-child(2){animation-delay:.15s} .typing i:nth-child(3){animation-delay:.3s}
+  @keyframes bob{0%,60%,100%{transform:translateY(0); opacity:.4} 30%{transform:translateY(-5px); opacity:1}}
+
+  /* Suggestions + input */
+  .sugg{display:flex; gap:8px; flex-wrap:wrap; padding:12px 16px 4px}
+  .chip{font-size:.84rem; cursor:pointer; background:#fff; border:2px solid var(--line); color:var(--ink);
+    padding:7px 12px; border-radius:999px; transition:all .12s ease; font-family:'Nunito Sans',sans-serif}
+  .chip:hover{border-color:var(--mc); transform:translateY(-1px)}
+  .hint{font-size:.82rem; color:var(--muted); text-align:center; padding:10px 16px 0; font-style:italic;}
+  .inputbar{display:flex; gap:10px; padding:12px 16px 16px}
+  .inputbar input{flex:1; font-family:'Nunito Sans',sans-serif; font-size:.96rem; padding:12px 16px;
+    border:2px solid var(--line); border-radius:999px; outline:none; background:#fff}
+  .inputbar input:focus{border-color:var(--mc)}
+  .send{cursor:pointer; border:none; background:var(--mc); color:#fff; font-family:'Fredoka',sans-serif;
+    font-weight:600; padding:0 22px; border-radius:999px; font-size:.96rem; transition:transform .1s ease}
+  .send:hover{transform:translateY(-1px)} .send:disabled{opacity:.5; cursor:default; transform:none}
+
+  /* Skills panel */
+  .side h3{font-size:1.05rem; padding:16px 16px 4px}
+  .side .sub{font-size:.8rem; color:var(--muted); padding:0 16px 10px}
+  .skills{display:flex; flex-direction:column; gap:7px; padding:0 14px 14px}
+  .skill{display:flex; align-items:center; gap:9px; font-size:.86rem; padding:8px 10px; border-radius:11px;
+    border:2px dashed var(--line); color:var(--muted); transition:all .3s ease; background:var(--cream)}
+  .skill .tick{width:18px;height:18px;border-radius:50%;border:2px solid var(--line); flex:0 0 auto; display:grid; place-items:center; font-size:.66rem}
+  .skill.on{color:var(--ink); border-style:solid; border-color:var(--green); background:#fff; font-weight:600}
+  .skill.on .tick{background:var(--green); border-color:var(--green); color:#fff}
+  .skill.pulse{animation:pop .5s ease}
+  @keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.04)}100%{transform:scale(1)}}
+
+  /* Parent modal */
+  .modal{position:fixed; inset:0; background:rgba(33,28,24,.55); display:none; place-items:center; padding:20px; z-index:50}
+  .modal.open{display:grid}
+  .sheet{background:var(--card); max-width:560px; width:100%; border-radius:var(--radius); padding:26px; box-shadow:var(--shadow); max-height:86vh; overflow-y:auto}
+  .sheet h2{font-size:1.3rem; color:var(--red-deep); display:flex; align-items:center; gap:10px}
+  .sheet h4{font-family:'Fredoka',sans-serif; font-size:.98rem; margin:18px 0 6px}
+  .sheet p,.sheet li{font-size:.9rem; color:#3c352e}
+  .sheet ul{padding-left:18px; display:flex; flex-direction:column; gap:5px; margin-top:4px}
+  .safe{display:flex; gap:9px; align-items:flex-start; background:var(--cream); border:2px solid var(--line);
+    border-radius:12px; padding:11px 13px; margin-top:8px; font-size:.88rem}
+  .safe .ic{width:22px;height:22px;flex:0 0 auto;border-radius:6px;background:var(--green);display:grid;place-items:center;color:#fff;font-size:.8rem;margin-top:1px}
+  .closex{float:right; cursor:pointer; border:none; background:var(--cream); width:34px;height:34px;border-radius:50%; font-size:1.1rem; color:var(--ink)}
+  .progress{height:9px; background:var(--sand); border-radius:999px; overflow:hidden; margin:6px 0 2px}
+  .progress > i{display:block; height:100%; background:var(--green); width:0; transition:width .5s ease}
+
+  footer{margin-top:18px; font-size:.78rem; color:var(--muted); text-align:center; line-height:1.6}
+  footer b{color:var(--ink)}
+  .demoflag{display:inline-block; background:var(--yellow); color:var(--ink); font-family:'Fredoka',sans-serif;
+    font-size:.72rem; padding:3px 10px; border-radius:999px; margin-bottom:6px}
+  .reset{cursor:pointer; background:none; border:none; color:var(--muted); text-decoration:underline; font-size:.8rem; font-family:inherit}
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="logo"><span class="dot"></span>PIEFEST <b>Companion</b></span>
+    <span class="tag">where your culture builds the future</span>
+    <span class="spacer"></span>
+    <button class="parent-btn" onclick="openParent()">👪 Parent &amp; Educator view</button>
+  </header>
+
+  <div class="kit">
+    <span class="pill">Now building</span>
+    <div>
+      <div class="knm">Fale Samoa: Building with Wisdom</div>
+      <div class="kgr">Grades 6–8 · Engineering · Science · Math &amp; Culture</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="panel">
+      <div class="mascots" id="mascots"></div>
+      <div class="chat" id="chat"></div>
+      <div class="hint">✨ Try a suggested question below for the best experience</div>
+      <div class="sugg" id="sugg"></div>
+      <div class="inputbar">
+        <input id="inp" placeholder="Ask about your fale build…" autocomplete="off"
+          onkeydown="if(event.key==='Enter')send()">
+        <button class="send" id="sendBtn" onclick="send()">Send</button>
+      </div>
+    </div>
+
+    <div class="panel side">
+      <h3>Skills you're building</h3>
+      <div class="sub">From the PIEFEST 14-skill K–8 framework. Watch them light up as you explore.</div>
+      <div class="skills" id="skills"></div>
+    </div>
+  </div>
+
+  <footer>
+    <span class="demoflag">INTERACTIVE PROTOTYPE</span><br>
+    This is a working prototype of the AI learning companion described in <b>Section 4.4</b> of the PIEFEST Imagineers business plan. The responses shown are <b>curated, community-reviewable samples</b> of what the companion says; the shipping product generates them dynamically behind the same human cultural-review gate.<br>
+    Every culturally-specific response is reviewed and validated by community elders before a child ever sees it.<br>
+    <button class="reset" onclick="resetChat()">Reset conversation</button>
+  </footer>
+</div>
+
+<div class="modal" id="modal">
+  <div class="sheet">
+    <button class="closex" onclick="closeParent()">✕</button>
+    <h2>👪 Parent &amp; Educator view</h2>
+    <p style="margin-top:6px">A window into what your child is learning, and how we keep them safe.</p>
+
+    <h4>Skills progress this session</h4>
+    <div class="progress"><i id="progBar"></i></div>
+    <p id="progTxt" style="font-size:.84rem;color:var(--muted)">No skills explored yet.</p>
+
+    <h4>How the companion keeps kids safe</h4>
+    <div class="safe"><span class="ic">✓</span><div><b>COPPA-by-design.</b> No name, age, school, or location is ever requested or stored. Nothing about your child is used to train any model.</div></div>
+    <div class="safe"><span class="ic">✓</span><div><b>No ads, ever.</b> The companion never markets to your child and never pushes a purchase.</div></div>
+    <div class="safe"><span class="ic">✓</span><div><b>On-topic guardrails.</b> The companion stays on the build and the learning. Off-topic or unsafe questions are gently redirected.</div></div>
+    <div class="safe"><span class="ic">✓</span><div><b>Human cultural review.</b> Community elders validate all culturally-specific content before it reaches a child.</div></div>
+
+    <h4>Why this matters</h4>
+    <p>Most STEM tutors treat culture as decoration. Ours treats it as the doorway in: a child sees that the wisdom in their own family's traditions <i>is</i> engineering, science, and math. That is what builds belonging, and belonging is what keeps kids in STEM.</p>
+  </div>
+</div>
+
+<script>
+/* ---------- Mascot SVGs (simple friendly robots) ---------- */
+function robot(color, emblem){
+  return `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+    <line x1="32" y1="6" x2="32" y2="13" stroke="${color}" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="32" cy="5" r="3.4" fill="${color}"/>
+    <rect x="12" y="13" width="40" height="34" rx="12" fill="${color}"/>
+    <rect x="17" y="19" width="30" height="18" rx="9" fill="#FFFDF8"/>
+    <circle cx="26" cy="28" r="3.5" fill="${color}"/>
+    <circle cx="38" cy="28" r="3.5" fill="${color}"/>
+    <path d="M27 33 q5 4 10 0" stroke="${color}" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    <rect x="22" y="47" width="20" height="9" rx="4.5" fill="${color}" opacity=".85"/>
+    <g transform="translate(32 41)">${emblem}</g>
+  </svg>`;
+}
+const EM = {
+  gear:`<g fill="#FFFDF8"><circle r="2.6"/><g stroke="#FFFDF8" stroke-width="2"><line x1="0" y1="-4.4" x2="0" y2="4.4"/><line x1="-4.4" y1="0" x2="4.4" y2="0"/><line x1="-3.1" y1="-3.1" x2="3.1" y2="3.1"/><line x1="-3.1" y1="3.1" x2="3.1" y2="-3.1"/></g></g>`,
+  leaf:`<path d="M0 -5 C5 -3 5 3 0 5 C-5 3 -5 -3 0 -5 Z" fill="#FFFDF8"/><line x1="0" y1="-4" x2="0" y2="4" stroke="${'#2FA36B'}" stroke-width="1.4"/>`,
+  star:`<path d="M0 -5 L1.4 -1.4 L5 -1.4 L2 1 L3.2 4.8 L0 2.5 L-3.2 4.8 L-2 1 L-5 -1.4 L-1.4 -1.4 Z" fill="#FFFDF8"/>`
+};
+
+const MASCOTS = {
+  mataio:{ name:"Mataio", domain:"Engineering", color:"#3FA9D6",
+    svg:robot("#3FA9D6", EM.gear),
+    persona:"You are MATAIO, the engineering mascot: upbeat, a builder at heart. You love structures, forces, balance, and how things hold together. You light up about the fale's curved roof beams, the coconut-fibre (\u02BBafa) lashings that join timber without a single nail, and how the rounded open form sheds wind and sheds the load to the posts. Connect what the student is building to real structural-engineering ideas (compression, tension, load paths, triangulation, stability).",
+    starters:["Why is the fale round instead of square?","How do the beams stay up with no nails?","What makes my model wobble?"] },
+  sesilia:{ name:"Sesilia", domain:"Science", color:"#2FA36B",
+    svg:robot("#2FA36B", EM.leaf),
+    persona:"You are SESILIA, the science mascot: curious, always asking 'why' and 'what if'. You love materials, weather, and nature. You connect the fale to science: why certain woods and fibres were chosen, how the open wall-less design moves air to stay cool in the tropics, how the thatch sheds rain, and how to test ideas like a scientist. Encourage observation and simple experiments.",
+    starters:["Why does the fale have no walls?","What materials were used, and why?","How does it stay cool inside?"] },
+  tui:{ name:"Tui", domain:"Math & Culture", color:"#F6B53F",
+    svg:robot("#F6B53F", EM.star),
+    persona:"You are TUI, the math-and-culture mascot: warm, a keeper of stories. You love patterns, geometry, proportion, and the cultural meaning behind them. You connect math to the spacing and symmetry of the fale's posts (poutu and poulalo), to siapo (tapa cloth) geometry, and to how Pacific navigators read the stars and swells. You help the student see that the fale is also a place where the family and village gather, and that their ancestors were mathematicians and engineers.",
+    starters:["What do the patterns mean?","How did my ancestors measure without rulers?","Why are the posts spaced evenly?"] }
+};
+
+const SKILLS = [
+  "Structural reasoning","Measurement & precision","Pattern recognition","Spatial visualization",
+  "Scientific observation","Hypothesis testing","Material properties","Geometric thinking",
+  "Proportional reasoning","Systems thinking","Cultural connection","Problem decomposition",
+  "Iterative design","Data interpretation"
+];
+
+let active="mataio";
+let history=[];            // {role, content} for API
+let touched=new Set();
+let busy=false;
+
+/* ---------- Render ---------- */
+function renderMascots(){
+  document.getElementById('mascots').innerHTML = Object.entries(MASCOTS).map(([id,m])=>`
+    <div class="mascot ${id===active?'active':''}" style="--mc:${m.color}" onclick="setActive('${id}')">
+      ${m.svg}
+      <div class="mn" style="color:${id===active?m.color:'var(--ink)'}">${m.name}</div>
+      <div class="md">${m.domain}</div>
+    </div>`).join('');
+  document.documentElement.style.setProperty('--mc', MASCOTS[active].color);
+  document.querySelectorAll('.inputbar input,.send').forEach(e=>e.style.setProperty('--mc',MASCOTS[active].color));
+}
+function renderSkills(pulseList=[]){
+  document.getElementById('skills').innerHTML = SKILLS.map(s=>{
+    const on=touched.has(s);
+    return `<div class="skill ${on?'on':''} ${pulseList.includes(s)?'pulse':''}">
+      <span class="tick">${on?'✓':''}</span>${s}</div>`;
+  }).join('');
+}
+function bubble(role, who, html, color){
+  const wrap=document.createElement('div');
+  wrap.className='row '+(role==='me'?'me':'');
+  if(role==='me'){
+    wrap.innerHTML=`<div class="bubble me">${html}</div>`;
+  }else if(role==='sys'){
+    wrap.className='row'; wrap.style.justifyContent='center';
+    wrap.innerHTML=`<div class="sys">${html}</div>`;
+  }else{
+    wrap.innerHTML=`<div class="av">${MASCOTS[who].svg}</div>
+      <div class="bubble bot"><div class="who" style="color:${color}">${MASCOTS[who].name}</div>${html}</div>`;
+  }
+  document.getElementById('chat').appendChild(wrap);
+  scroll();
+  return wrap;
+}
+function scroll(){const c=document.getElementById('chat'); c.scrollTop=c.scrollHeight;}
+function renderSugg(){
+  document.getElementById('sugg').innerHTML = MASCOTS[active].starters
+    .map(q=>`<div class="chip" onclick="quick(this)">${q}</div>`).join('');
+}
+
+/* ---------- Interaction ---------- */
+function setActive(id){
+  if(id===active) return;
+  active=id; renderMascots(); renderSugg();
+  bubble('sys', null, `${MASCOTS[id].name} joined to help with ${MASCOTS[id].domain.toLowerCase()} 👋`);
+}
+function quick(el){ document.getElementById('inp').value=el.textContent; send(); }
+
+/* ============================================================
+   VETTED RESPONSE LIBRARY  —  EDIT FREELY
+   Every reply here is a curated, community-reviewable sample of
+   what the AI companion says. In the shipping product these are
+   generated dynamically behind the same human cultural-review gate.
+   Each entry: keys = words that trigger it; skills = framework
+   skills it lights up (must match the SKILLS list exactly).
+   ============================================================ */
+const RESPONSES = {
+  mataio:[
+    {keys:["round","square","shape","circle","oval","corner","why is the fale"],
+     reply:"Great eye! A rounded shape has no flat wall for a storm to slam into, so cyclone winds slide around it instead of pushing it over. The load spreads evenly to every post. Your ancestors were doing wind engineering long before it had that name.",
+     skills:["Structural reasoning","Spatial visualization","Cultural connection"]},
+    {keys:["nail","lash","beam","joint","tie","rope","fibre","fiber","hold","stay up","afa","ʻafa"],
+     reply:"No nails at all, malo for noticing! The timbers are bound with \u02BBafa, braided coconut fibre, wrapped in tight patterns that grip each joint. A lashing flexes a little in a storm and holds, where a stiff nail would crack. Smart, flexible engineering.",
+     skills:["Structural reasoning","Material properties","Iterative design"]},
+    {keys:["wobble","wobbly","shaky","fall","stable","sturdy","collapse","brace","strong"],
+     reply:"Wobble usually means a joint is loose or your posts aren't evenly spaced. Try adding a diagonal brace between two posts to make a triangle, a triangle can't squash out of shape the way a square can. That's the secret to a sturdy build.",
+     skills:["Structural reasoning","Problem decomposition","Iterative design"]}
+  ],
+  sesilia:[
+    {keys:["wall","walls","open","no walls","side"],
+     reply:"The open sides are the genius part! With no walls, cool sea breezes flow straight through and carry the heat away. In the tropics that natural airflow keeps everyone comfortable with no machine at all. We call that passive cooling.",
+     skills:["Scientific observation","Systems thinking","Material properties"]},
+    {keys:["material","materials","wood","thatch","leaf","made of","what was used"],
+     reply:"Every material has a job: strong timber for the posts, layered thatch from sugarcane or coconut leaves for a roof that sheds rain and lets hot air escape, and coconut-fibre lashings to tie it together. Nothing is there by accident.",
+     skills:["Material properties","Scientific observation","Systems thinking"]},
+    {keys:["cool","hot","heat","temperature","air","airflow","breeze","warm"],
+     reply:"Two clever tricks. The open walls let breeze pass through, and the thick thatched roof blocks the sun while letting warm air rise and slip out near the peak. Hot air leaves up high, cool air comes in low. Want to test it with your model?",
+     skills:["Scientific observation","Systems thinking","Hypothesis testing"]}
+  ],
+  tui:[
+    {keys:["pattern","patterns","design","siapo","tapa","decorate","mean"],
+     reply:"Beautiful question. The repeating patterns in siapo (tapa cloth) and in the lashings often carry family and village stories. They're math you can see: symmetry, repetition, and ratio used as a language. Your culture wrote math into art.",
+     skills:["Pattern recognition","Geometric thinking","Cultural connection"]},
+    {keys:["measure","ruler","measuring","without","how did they","size"],
+     reply:"No rulers needed! They measured with the body, a forearm, a hand-span, a pace, and kept the ratios between them consistent. That steady proportion is exactly what keeps the fale balanced and beautiful. Proportion is ancient math.",
+     skills:["Proportional reasoning","Measurement & precision","Cultural connection"]},
+    {keys:["space","spaced","spacing","posts","even","why are the posts","distance"],
+     reply:"Even spacing shares the roof's weight equally, so no single post carries too much, and it creates the symmetry that makes the fale feel calm and balanced. The fale is where the family gathers, so the math and the meaning hold it up together.",
+     skills:["Geometric thinking","Proportional reasoning","Structural reasoning"]}
+  ]
+};
+const FALLBACK = {
+  mataio:{reply:"Love the curiosity! I'm strongest on how the fale stands strong, its rounded shape, the \u02BBafa lashings, and what keeps your model from wobbling. Tap one of those below, or ask me in your own words.",
+    skills:["Problem decomposition"]},
+  sesilia:{reply:"Good thinking! My favourite topics are the open walls, the materials, and how the fale stays cool without electricity. Pick a question below or ask me anything about how it works.",
+    skills:["Scientific observation"]},
+  tui:{reply:"Malo for asking! I love the patterns, the proportions your ancestors used, and why the posts are spaced the way they are. Tap a question below, or tell me what you're wondering.",
+    skills:["Cultural connection"]}
+};
+
+function matchResponse(who, text){
+  const q=text.toLowerCase();
+  let best=null, score=0;
+  (RESPONSES[who]||[]).forEach(r=>{
+    const s=r.keys.reduce((n,k)=> n + (q.includes(k)?1:0), 0);
+    if(s>score){ score=s; best=r; }
+  });
+  if(best && score>0) return {reply:best.reply, skills:best.skills.slice()};
+  return {reply:FALLBACK[who].reply, skills:FALLBACK[who].skills.slice()};
+}
+
+function send(){
+  const inp=document.getElementById('inp');
+  const text=inp.value.trim();
+  if(!text || busy) return;
+  inp.value='';
+  bubble('me', null, escapeHtml(text));
+  busy=true; document.getElementById('sendBtn').disabled=true;
+  const who=active, color=MASCOTS[who].color;
+  const t=bubble('bot', who, `<span class="typing"><i></i><i></i><i></i></span>`, color);
+
+  // brief "thinking" beat so the companion feels alive
+  setTimeout(()=>{
+    const {reply, skills}=matchResponse(who, text);
+    t.querySelector('.bubble').innerHTML=
+      `<div class="who" style="color:${color}">${MASCOTS[who].name}</div>${escapeHtml(reply)}`;
+    const fresh=skills.filter(s=>SKILLS.includes(s) && !touched.has(s));
+    skills.forEach(s=>{ if(SKILLS.includes(s)) touched.add(s); });
+    renderSkills(fresh); updateProgress(); scroll();
+    busy=false; document.getElementById('sendBtn').disabled=false; inp.focus();
+  }, 600);
+}
+
+function updateProgress(){
+  const pct=Math.round(touched.size/SKILLS.length*100);
+  document.getElementById('progBar').style.width=pct+'%';
+  document.getElementById('progTxt').textContent =
+    touched.size===0 ? 'No skills explored yet.'
+    : `${touched.size} of ${SKILLS.length} skills explored: ${[...touched].join(', ')}.`;
+}
+function resetChat(){
+  history=[]; touched=new Set(); busy=false;
+  document.getElementById('chat').innerHTML='';
+  renderSkills(); updateProgress(); greet();
+}
+function greet(){
+  bubble('sys', null, 'Pick a buddy below, tap a question, or type your own.');
+  bubble('bot','tui',
+    `Talofa! 👋 You're building a <b>fale</b>, a Samoan house your ancestors engineered to stand strong for generations. Mataio, Sesilia and I are here to help. What do you want to figure out first?`,
+    MASCOTS.tui.color);
+}
+function escapeHtml(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])).replace(/\n/g,'<br>');}
+
+function openParent(){ updateProgress(); document.getElementById('modal').classList.add('open'); }
+function closeParent(){ document.getElementById('modal').classList.remove('open'); }
+document.getElementById('modal').addEventListener('click',e=>{ if(e.target.id==='modal') closeParent(); });
+
+/* init */
+renderMascots(); renderSkills(); renderSugg(); greet();
+</script>
